@@ -18,24 +18,28 @@ class ItemHandler(WBHandler):
     def handle_request(self, wbrequest):
         item = wbrequest.coll
 
-        # check if cdx exists, if not download it
-        cdx_file = os.path.join(self.item_cdx_root, item + '.cdx.gz')
         idx_file = os.path.join(self.item_cdx_root, item + '.cdx.idx')
+        cdx_file = os.path.join(self.item_cdx_root, item + '.cdx.gz')
 
-        if not os.path.isfile(cdx_file):
-            cdx_url = self.download_prefix + item + '/' + item + '.cdx.gz'
+        # first, try to download idx and use remote cdx
+        if not os.path.isfile(idx_file) and not os.path.isfile(cdx_file):
             idx_url = self.download_prefix + item + '/' + item + '.cdx.idx'
-            try:
-                self.download_file(cdx_url, cdx_file)
-            except:
-                raise
-
             try:
                 self.download_file(idx_url, idx_file)
                 self.number_idx(idx_file)
                 idx_found = True
             except:
                 idx_found = False
+
+            if idx_found:
+                return
+
+            # try to download cdx file if no idx
+            cdx_url = self.download_prefix + item + '/' + item + '.cdx.gz'
+            try:
+                self.download_file(cdx_url, cdx_file)
+            except:
+                raise
 
         return super(ItemHandler, self).handle_request(wbrequest)
 
@@ -88,11 +92,18 @@ class ItemCDXIndex(ZipNumCluster):
     def __init__(self, summary, config):
         self.root_path = summary
         super(ItemCDXIndex, self).__init__(summary, config)
+        self.prefix = config.get('archive_paths')
+
+        def resolve(part, query):
+            coll = query.params.get('coll')
+            local_cdx = os.path.join(self.root_path, coll + '.cdx.gz')
+            remote_cdx = self.prefix + coll + '/' + part
+            return [local_cdx, remote_cdx]
+
+        self.loc_resolver = resolve
 
     def load_cdx(self, query):
         coll = query.params.get('coll')
-        print('COLL: ' + coll)
         full = os.path.join(self.root_path, coll + '.cdx.idx')
-        print('FULL: ' + full)
 
         return self._do_load_cdx(full, query)

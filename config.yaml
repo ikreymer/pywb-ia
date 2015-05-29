@@ -25,7 +25,8 @@ collections:
         
         coll_group: 1
         shard_index_loc:
-            replace: './item_cdx/'
+            replace: 'http://archive.org/download/'
+
 
 urlrewriter_class: !!python/name:tools.archivereplayview.ReUrlRewriter
 
