@@ -1,15 +1,15 @@
 pywb IA Tools
 =============
 
-This project contains the setup for running pywb web archive replay system with the Internet Archive web archives.
+This project contains the setup for running [pywb web archive replay system](http://github.com/ikreymer/pywb) with the Internet Archive web archives.
 
 It is still in experimental/alpha phase and should only be used for testing replay only.
 
 ## Installation
 
-`pip install -r requirements.txt` which includes installing latest pywb and uwsgi.
+`pip install -r requirements.txt` which includes installing latest pywb and uwsgi and gevent.
 
-Run with `uwsgi uwsgi.ini`
+Run with `uwsgi uwsgi.ini` (The current default is gevent+uwsgi but feel free to modify `uwsgi.ini` as needed)
 
 ## Available Tools
 
