@@ -16,6 +16,10 @@ class ItemHandler(WBHandler):
         super(ItemHandler, self).__init__(query_handler, config)
 
     def handle_request(self, wbrequest):
+        self.load_item_files(wbrequest)
+        return super(ItemHandler, self).handle_request(wbrequest)
+
+    def load_item_files(self, wbrequest):
         item = wbrequest.coll
 
         idx_file = os.path.join(self.item_cdx_root, item + '.cdx.idx')
@@ -40,8 +44,6 @@ class ItemHandler(WBHandler):
                 self.download_file(cdx_url, cdx_file)
             except:
                 raise
-
-        return super(ItemHandler, self).handle_request(wbrequest)
 
     def download_file(self, url, filename):
         """ Download cdx or idx file locally

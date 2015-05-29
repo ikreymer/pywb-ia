@@ -27,7 +27,7 @@ collections:
         shard_index_loc:
             replace: 'http://archive.org/download/'
 
-
+buffer_response: false
 urlrewriter_class: !!python/name:tools.archivereplayview.ReUrlRewriter
 
 enable_cdx_api: true
