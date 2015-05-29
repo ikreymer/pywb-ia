@@ -1,0 +1,33 @@
+
+collections:
+    web:
+        index_paths: 'http://web.archive.org/cdx/search/cdx'
+        archive_prefix: 'http://web.archive.org/'
+        wb_handler_class: !!python/name:tools.archivereplayview.ReplayHandler
+
+    'ait/(all)':
+        index_paths: 'http://wayback.archive-it.org/cdx/search/cdx'
+        archive_prefix: 'http://wayback.archive-it.org/'
+        coll_group: 1
+        wb_handler_class: !!python/name:tools.archivereplayview.ReplayHandler
+
+    'ait/([0-9]+)':
+        index_paths: 'http://wayback.archive-it.org/cdx/search/cdx'
+        archive_prefix: 'http://wayback.archive-it.org/'
+        coll_group: 1
+        wb_handler_class: !!python/name:tools.archivereplayview.ReplayHandler
+
+    'item/([\w$]+)':
+        index_paths: ./item_cdx
+        archive_paths: 'http://archive.org/download/'
+        wb_handler_class: !!python/name:tools.iaitemhandler.ItemHandler
+        server_cls: !!python/name:tools.iaitemhandler.ItemCDXServer
+        
+        coll_group: 1
+        shard_index_loc:
+            replace: './item_cdx/'
+
+urlrewriter_class: !!python/name:tools.archivereplayview.ReUrlRewriter
+
+enable_cdx_api: true
+framed_replay: inverse
