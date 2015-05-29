@@ -1,1 +1,2 @@
+-e git+http://github.com/ikreymer/pywb@develop#egg=pywb-0.10.0-dev
 uwsgi
