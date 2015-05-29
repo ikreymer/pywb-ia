@@ -27,13 +27,13 @@ using pywb replay system.
 
 `<COLLID>` corresponds to a collection from the http://archive-it.org/ service.
 
-## Single Item Replay
+## Single Item Replay `/item/`
 
 * `/item/<ITEMNAME>` -> replays from WARC files stored under `http://archive.org/details/<ITEMNAME>`
 
 For any public ITEMNAME that has a cdx files, replay content from that item only.
 This will download the item `.idx` file locally on first use, and access the `.cdx.gz` and WARC remotely.
-The item `.idx`, `.cdx.gz` and WARC files must be accessible.
+The item's `.idx`, `.cdx.gz` and WARC files must be accessible for this to work.
 
 
 
