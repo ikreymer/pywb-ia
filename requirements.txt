@@ -1,3 +1,4 @@
--e git+http://github.com/ikreymer/pywb@develop#egg=pywb-0.10.0-dev
+#-e git+http://github.com/ikreymer/pywb@develop#egg=pywb-0.10.0-dev
+pywb>=0.10.0
 gevent
 uwsgi
