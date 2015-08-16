@@ -1,14 +1,8 @@
-FROM python:2.7
+FROM ikreymer/pywb
 
-WORKDIR /code
+ADD . /webarchive
 
-ADD requirements.txt /code/
-
-RUN pip install -r requirements.txt
-
-EXPOSE 8080
-
-ADD . /code
+ADD uwsgi.ini /uwsgi/uwsgi.ini
 
 CMD uwsgi uwsgi.ini
 
