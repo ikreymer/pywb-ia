@@ -22,6 +22,7 @@ class ReplayHandler(WBHandler):
 class LiveDirectLoader(object):
     def __init__(self, config):
         self.session = requests.Session()
+        self.session.max_redirects = 6
         self.archive_prefix = config['archive_prefix']
 
     def _do_req(self, urls, skip_hosts):
@@ -29,7 +30,7 @@ class LiveDirectLoader(object):
         for url in urls:
             response = self.session.request(method='GET',
                                             url=url,
-                                            allow_redirects=False,
+            #                                allow_redirects=False,
                                             stream=True,
                                             verify=False)
 
@@ -39,9 +40,12 @@ class LiveDirectLoader(object):
             mem_date_time = response.headers.get('memento-datetime')
 
             if (response.status_code >= 400 and not mem_date_time):
-                if (response.status_code == 403 or response.status_code >= 500):
+                if response.status_code == 403:
                     # don't try again
-                    #skip_hosts.append(archive_host)
+                    skip_hosts.append(archive_host)
+                    return None
+
+                elif response.status_code >= 500:
                     return None
 
                 # try again
@@ -55,14 +59,15 @@ class LiveDirectLoader(object):
     def __call__(self, cdx, skip_hosts, cdx_loader, wbrequest):
         url = cdx['url']
         full_url = self.archive_prefix + wbrequest.coll + '/' + cdx['timestamp'] + 'id_/' + url
-        print('URL: ' + full_url)
         try_urls = [full_url]
 
-        response = self._do_req(try_urls, skip_hosts)
+        try:
+            response = self._do_req(try_urls, skip_hosts)
+        except Exception as e:
+            response = None
 
         if response is None:
-            #skip_hosts.append(archive_host)
-            raise CaptureException('Unsuccessful response, trying another')
+            raise CaptureException('Content Could Not Be Loaded')
 
         statusline = str(response.status_code) + ' ' + response.reason
 
